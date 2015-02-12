@@ -4,10 +4,10 @@
 LiquidCrystal lcd(4, 5, 6, 7, 8, 9);
 SoftwareSerial wifi(3,2);
 
-String SSID = "VeldhofHuis";
-String Password = "fonar123";
-String IP = "184.106.153.149";
-String API = "0MTOHTVRCTL0U8H4";
+String SSID = "YourSSID";
+String Password = "Password";
+String IP = "184.106.153.149"; //thingspeak ip
+String API = "YourAPI";
 String httpTemp = "GET /update?key=" + API + "&field1=";
 
 int pinTemp0 = 0;
