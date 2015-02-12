@@ -21,7 +21,8 @@ boolean reset = false;
 
 void setup() {                
   pinMode(13, OUTPUT);
-  
+
+  Serial.begin(9600);
   lcd.begin(16, 2);
   wifi.begin(9600); 
   wifi.listen();
@@ -43,7 +44,7 @@ void setup() {
 void loop() {
   if(reset) {
     while (!initialise()) {
-      ;
+      Serial.println("Can't initialize");
     }
     digitalWrite(13, HIGH);
     delay(100);
@@ -61,6 +62,7 @@ void loop() {
   updateScreen();
 
   if(count >= 30000) {
+    Serial.println("Updating temps...");
     lcd.setCursor(0,0);
     lcd.print("Rookgas!");
     lcd.setCursor(0,1);
@@ -100,6 +102,7 @@ boolean makeConnection()
   while(wifi.available()) {
     wifi.read();
   }
+  Serial.print("Making connection...");
   String cmd = "AT+CIPSTART=\"TCP\",\"";
   cmd += IP;
   cmd += "\",80";
@@ -107,12 +110,14 @@ boolean makeConnection()
   int count = 0;
   while(!wifi.find("Linked")) {
     if(count >= 2000) {
+      Serial.println();
       return false;
     }
     count += 100;
     delay(100);
     Serial.print(".");
   }
+  Serial.println(" DONE");
   return true;
 }
 
@@ -127,29 +132,36 @@ boolean sendData()
   cmdTemp += String(temp1);
   cmdTemp += "\r\n";
 
+  Serial.print("Sending data...");
   //-----Make announcement
   String cmd = "AT+CIPSEND=" + String(cmdTemp.length());
   wifi.println(cmd);
   while(!wifi.find(">")) {
     delay(100);
+    Serial.print(".");
   }
 
   //-----Send data temp
+  Serial.print("data...");
   wifi.print(cmdTemp);
   return true;
 }
 
 boolean closeConnection()
 {
+  Serial.print("Closing connection...");
   int count = 0;
   wifi.println("AT+CIPCLOSE");
   while(!wifi.find("Unlink")) {
     if (count >= 1000) {
+      Serial.println();
       return false;
     }
     count += 100;
+    Serial.print(".");
     delay(100);
   }
+  Serial.println(" DONE");
   return true;
 }
 
@@ -176,6 +188,7 @@ boolean initialise()
   lcd.print("00");
 
   //----Reset Board----
+  Serial.print("Resetting board... ");
   lcd.setCursor(0,1);
   lcd.print("Reset           ");
   wifi.println("AT+RST");
@@ -187,10 +200,12 @@ boolean initialise()
     count += 100;
     delay(100);
   }
+  Serial.println("DONE");
   lcd.setCursor(0,0);
   lcd.print("0000");
 
   //----Set mode----
+  Serial.print("Setting mode... ");
   lcd.setCursor(0,1);
   lcd.print("Setting mode    ");
   wifi.println("AT+CWMODE=1");
@@ -202,10 +217,12 @@ boolean initialise()
     count += 100;
     delay(100);
   }
+  Serial.println("DONE");
   lcd.setCursor(0,0);
   lcd.print("000000");
 
   //----Connect to network-----
+  Serial.print("Connecting to network...");
   lcd.setCursor(0,1);
   lcd.print("Connecting      ");
 
@@ -219,11 +236,14 @@ boolean initialise()
     }
     count += 250;
     delay(250);
+    Serial.print(".");
   }
+  Serial.println(" DONE");
   lcd.setCursor(0,0);
   lcd.print("0000000000");
 
   //----One connection-----
+  Serial.print("Set for one connections... ");
   lcd.setCursor(0,1);
   lcd.print("Multiple cons   ");
   wifi.println("AT+CIPMUX=0");
@@ -235,6 +255,7 @@ boolean initialise()
     count += 100;
     delay(100);
   }
+  Serial.println("DONE");
   lcd.setCursor(0,0);
   lcd.print("0000000000000");
   lcd.clear();
