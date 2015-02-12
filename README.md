@@ -1,4 +1,4 @@
-# Arduino-ESP8266
+# ArduinoNano-ESP8266
 
 This is a little project I made to read a couple of temperatures.
 These temps are posted to thingspeak and displayed on a lcd screen.
