@@ -1,6 +1,6 @@
 # ArduinoNano-ESP8266
-This is a little project I made to read a couple of temperatures.
-These temps are posted to thingspeak and displayed on a lcd screen.
+This is a little project I made to read a couple of temperatures.<br>
+The temps that have been read are posted to thingspeak and displayed on a lcd screen.
 
 <h2>Installation</h2>
 
@@ -33,5 +33,5 @@ Also your API key has to be inserted in the correct place.<br>
 If you have more channels or fields at thingspeak you have to change the GET request.
 
 <h2>Note</h2>
-You have to figure out for yourself how to wire your thermometers
+You have to figure out for yourself how to wire your thermometers<br>
 Also you have to figure out the formula for the thermometer
